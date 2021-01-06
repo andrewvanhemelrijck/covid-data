@@ -1,0 +1,5 @@
+name: 'Update Data'
+description: 'Check data sources and rebuild data files with new data'
+runs:
+  using: 'node12'
+  main: 'index.js'
