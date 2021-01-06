@@ -17,13 +17,7 @@ async function getFileContentsString(octokit, path) {
 
     return Buffer.from(file.data.content, 'base64').toString();
   } catch (error) {
-
-
-
-    // if file is too big, run large file func
-
-
-
+    // TODO: if file is too big, run large file func
     core.setFailed(error.message);
   }
 }
@@ -101,16 +95,16 @@ async function run() {
   const octokit = github.getOctokit(myToken);
 
   // check if data is outdated
-  const currentOWIDUpdatedTimestamp = await getFileContentsString(octokit, 'public/data/owid/owid-covid-data-last-updated-timestamp.txt');
+  const currentOWIDUpdatedTimestamp = await getFileContentsString(octokit, 'data/owid/owid-covid-data-last-updated-timestamp.txt');
   const newOWIDUpdatedTimestamp = await fetchFileContents('https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data-last-updated-timestamp.txt');
   if (new Date(currentOWIDUpdatedTimestamp) >= new Date(newOWIDUpdatedTimestamp)) return;
 
   // archive the current covid-data json file
-  const currentOWIDDataSHA = await getSHA(octokit, 'public/data/owid/owid-covid-data.json');
+  const currentOWIDDataSHA = await getSHA(octokit, 'data/owid/owid-covid-data.json');
   const currentOWIDData = await getLargeFileContentsString(octokit, currentOWIDDataSHA);
   await createOrUpdateFiles({
     octokit,
-    path: `public/data/owid/archive/owid-covid-data-${new Date().toISOString()}.json`,
+    path: `data/owid/archive/owid-covid-data-${new Date().toISOString()}.json`,
     fileContent: currentOWIDData,
   });
 
@@ -119,26 +113,22 @@ async function run() {
   const newOWIDDataJSON = JSON.stringify(formatOWIDData(newOWIDData));
   await createOrUpdateFiles({
     octokit,
-    path: `public/data/owid/owid-covid-data.json`,
+    path: `data/owid/owid-covid-data.json`,
     fileContent: JSON.stringify(newOWIDData),
-    sha: await getSHA(octokit, `public/data/owid/owid-covid-data.json`)
+    sha: await getSHA(octokit, `data/owid/owid-covid-data.json`)
   });
   await createOrUpdateFiles({
     octokit,
-    path: `public/data/covid-world-data.json`,
+    path: `data/covid-world-data.json`,
     fileContent: newOWIDDataJSON,
-    sha: await getSHA(octokit, `public/data/covid-world-data.json`)
+    sha: await getSHA(octokit, `data/covid-world-data.json`)
   });
   await createOrUpdateFiles({
     octokit,
-    path: `public/data/owid/owid-covid-data-last-updated-timestamp.txt`,
+    path: `data/owid/owid-covid-data-last-updated-timestamp.txt`,
     fileContent: new Date().toISOString(),
-    sha: await getSHA(octokit, `public/data/owid/owid-covid-data-last-updated-timestamp.txt`)
+    sha: await getSHA(octokit, `data/owid/owid-covid-data-last-updated-timestamp.txt`)
   });
-
-  // test
-  // send an email on success
-  // revert on failure
 }
 
 try {
