@@ -5,7 +5,7 @@ const { formatOWIDData } = require('./utils');
 
 const githubCredentials = {
   owner: 'andrewvanhemelrijck',
-  repo: 'covid-tracker',
+  repo: 'covid-data',
 };
 
 async function getFileContentsString(octokit, path) {
