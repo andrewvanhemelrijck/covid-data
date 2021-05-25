@@ -6,10 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  - job: update_data_job
-    continueOnError: true
-    workspace:
-      clean: all
+  update_data_job:
     runs-on: ubuntu-latest
     name: Make sure data is current
     steps:
