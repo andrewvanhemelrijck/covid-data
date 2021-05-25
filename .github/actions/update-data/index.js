@@ -104,7 +104,7 @@ async function run() {
   const currentOWIDData = await getLargeFileContentsString(octokit, currentOWIDDataSHA);
   await createOrUpdateFiles({
     octokit,
-    path: `data/owid/archive/owid-covid-data-${new Date().toISOString()}.json`,
+    path: `data/owid/archive/owid-covid-data.json`,
     fileContent: currentOWIDData,
   });
 
