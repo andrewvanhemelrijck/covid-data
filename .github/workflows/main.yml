@@ -9,6 +9,8 @@ jobs:
   update_data_job:
     runs-on: ubuntu-latest
     name: Make sure data is current
+    workspace:
+      clean: all
     steps:
       - name: Checkout
         uses: actions/checkout@v2
